@@ -1,0 +1,63 @@
+[tool.poetry]
+authors = ["Andrei Aksionov"]
+description = "Service that provides endpoint for text vectorization (weaviate text to vector module)"
+license = "MIT"
+name = "weaviate-t2v-module"
+packages = [
+  {include = "src"},
+]
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+fastapi = "~0.74.1"
+loguru = "~0.6.0"
+omegaconf = "~2.1.1"
+pydantic = "~1.8.1"
+python = "~3.9.9"
+sentence-transformers = "~2.2.0"
+torch = "~1.10.2"
+torchvision = "~0.11.3"
+transformers = "~4.17.0"
+uvicorn = "~0.17.5"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+flake8 = "*"
+flake8-absolute-import = "*"
+flake8-annotations = "*"
+flake8-bugbear = "*"
+flake8-commas = "*"
+flake8-comprehensions = "*"
+flake8-docstrings = "~1.6.0"
+flake8-eradicate = "*"
+flake8-expression-complexity = "*"
+flake8-isort = "*"
+flake8-print = "*"
+flake8-pytest-style = "*"
+hypothesis = "~6.40.1"
+pytest = "~7.0.1"
+pytest-asyncio = "~0.18.2"
+toml = "~0.10.2"
+
+[tool.isort]
+ensure_newline_before_comments = true
+force_grid_wrap = 0
+include_trailing_comma = true
+line_length = 88
+multi_line_output = 3
+use_parentheses = true
+
+[tool.black]
+line_length = 120
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+markers = [
+  "Docker: marks tests for docker container (deselect with '-m \"not Docker\"')",
+]
+python_files = "*_test.py"
+testpaths = ["tests"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

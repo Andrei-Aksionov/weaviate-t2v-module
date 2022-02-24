@@ -1,0 +1,39 @@
+@host=http://0.0.0.0
+@port=8080
+
+
+### Meta endpoint ###
+# should return information what vecrotizer model is used
+###
+GET {{host}}:{{port}}/meta
+
+
+### /vectors endpoint ###
+# takes text as an input and returns vector representation
+# the first call return vector
+# the second call with an empty string also return a vector
+#   (the same size as for non empty string)
+# the third call return an error
+###
+POST {{host}}:{{port}}/vectors HTTP/1.1
+Content-Type: application/json
+
+{
+    "text": "Hello World"
+}
+
+###
+POST {{host}}:{{port}}/vectors HTTP/1.1
+Content-Type: application/json
+
+{
+    "text": ""
+}
+
+###
+POST {{host}}:{{port}}/vectors HTTP/1.1
+Content-Type: application/json
+
+{
+    "text": null
+}
