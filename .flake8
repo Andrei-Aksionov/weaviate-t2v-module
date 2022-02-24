@@ -1,0 +1,11 @@
+[flake8]
+max-line-length = 120
+ignore =
+    W292,   # no newline at end of fileflake8(W292)
+    ANN101, # Missing type annotation for self in methodflake8(TYP101)
+    ANN204, # Missing return type annotation for special methodflake8(TYP204)
+    SC200,  # Spelling error in name (e.g. variable, function, class)
+    D100,   # Missing docstring in public moduleflake8(D100)
+    D101,   # Missing docstring in public classflake8(D101)
+    D401,   # First line should be in imperative mood; try rephrasingflake8(D401)
+    PT023,  # use @pytest.mark.asyncio() over @pytest.mark.asyncioflake8(PT023)
