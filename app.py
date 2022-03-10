@@ -1,23 +1,18 @@
 import uvicorn
-import yaml
 from fastapi import FastAPI, HTTPException, Response, status
 from loguru import logger
 from sentence_transformers import SentenceTransformer
 
-from src import Meta, TextItem, Vectorizer
+from src import Meta, TextItem, Vectorizer, config
 
 app = FastAPI()
-
-# loading config
-with open("src/config/config.yaml", "r") as fin:
-    config = yaml.safe_load(fin)
 
 
 @app.on_event("startup")
 def startup_even() -> None:
     """Code below will be executed on app start."""
     global vectorizer, meta_info
-    model = SentenceTransformer(config["vectorizer"]["model_name"])
+    model = SentenceTransformer(config.vectorizer.model_name)
     vectorizer = Vectorizer(model)
     meta_info = Meta(model)
 
@@ -90,6 +85,6 @@ async def vectorize(item: TextItem) -> dict:
 if __name__ == "__main__":
     uvicorn.run(
         app,
-        host=config["app"]["host"],
-        port=config["app"]["port"],
+        host=config.app.host,
+        port=config.app.port,
     )
