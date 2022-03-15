@@ -1,5 +1,5 @@
 vectorizer:
-  model_name: paraphrase-MiniLM-L6-v2
+  model_name: msmarco-distilbert-base-v4
 
 app:
   host: 0.0.0.0

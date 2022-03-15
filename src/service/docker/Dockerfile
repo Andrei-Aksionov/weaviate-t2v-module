@@ -1,5 +1,5 @@
 ############################## GLOBAL ARGUMENTS ##############################
-# setting up global arguments that will be used in both build stages
+### setting up global arguments that will be used in both build stages ###
 ARG APP_DIR=/usr/app
 # to use the latest version of poetry use `master` instead of exact numeric version
 ARG POETRY_VERSION=1.1.13
@@ -53,21 +53,28 @@ ENV HOST=${HOST}
 ARG PORT
 ENV PORT=${PORT}
 
+# creating non-root user
+RUN groupadd python --gid 1000; \
+    useradd python --gid 1000 --uid 1000 --create-home --shell /bin/false
+
 RUN apt-get update; \
     apt-get upgrade -y; \
     apt-get autoclean
 
 WORKDIR $APP_DIR
 
-COPY src/ src/
-COPY app.py .
-
 # copying venv from previous step and making it permanently activated
-COPY --from=base  $APP_DIR/venv $APP_DIR/venv
+COPY --from=base --chown=python:python $APP_DIR/venv $APP_DIR/venv
 ENV PATH="${APP_DIR}/venv/bin:$PATH"
 
-# downloading sentence transformer model
+USER python
+
+# downloading sentence transformer model during `docker build`
+# otherwise it will be downloaded each time during `docker run`
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('${MODEL_NAME}');"
+
+COPY --chown=python:python src/ src/
+COPY --chown=python:python app.py .
 
 ENTRYPOINT [ "/bin/sh", "-c"]
 CMD ["uvicorn app:app --host ${HOST} --port ${PORT}"]
