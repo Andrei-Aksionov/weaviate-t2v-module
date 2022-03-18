@@ -1,17 +1,17 @@
 import pytest
-import yaml
 from sentence_transformers import SentenceTransformer
 
-from src import Meta, Vectorizer
+from src import Meta, Vectorizer, config
 
 
 @pytest.mark.asyncio
 class TestVectorizer:
+
+    test_texts = ["", "Test text"]
+
     @classmethod
     def setup_class(cls: "TestVectorizer") -> None:
-        with open("src/config/config.yaml", "r") as fin:
-            config = yaml.safe_load(fin)
-        cls.model = SentenceTransformer(config["vectorizer"]["model_name"])
+        cls.model = SentenceTransformer(config.vectorizer.model_name)
         cls.vectorizer = Vectorizer(cls.model)
         cls.meta = Meta(cls.model)
 
@@ -23,7 +23,7 @@ class TestVectorizer:
         with pytest.raises(ValueError, match="None value is not allowed"):
             await TestVectorizer.vectorizer.vectorize(text)
 
-    @pytest.mark.parametrize("text", ["", "Test text"])
+    @pytest.mark.parametrize("text", test_texts)
     async def test_vectorizer_returns_list(self, text: str) -> None:
         # When
         vector = await TestVectorizer.vectorizer.vectorize(text)
@@ -31,7 +31,7 @@ class TestVectorizer:
         # Then
         assert isinstance(vector, list)
 
-    @pytest.mark.parametrize("text", ["", "Test text"])
+    @pytest.mark.parametrize("text", test_texts)
     async def test_vectorizer_returns_list_of_floats(self, text: str) -> None:
         # When
         vector = await TestVectorizer.vectorizer.vectorize(text)

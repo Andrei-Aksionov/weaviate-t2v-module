@@ -1,7 +1,10 @@
+import json
 import subprocess
+from types import SimpleNamespace
 
 import toml
-import yaml
+
+from src import config
 
 
 def main() -> None:
@@ -10,20 +13,24 @@ def main() -> None:
     Parse parameters from config files and call `docker build` with them
     as arguments for the build procedure.
     """
-    # parsing project's metadata and config files
-    project_metadata = toml.load("pyproject.toml")
-    with open("src/config/config.yaml", "r") as fin:
-        config = yaml.safe_load(fin)
+    # parsing project's metadata and config files into SimpleNamespace object
+    # (nested dictionary with dot access)
+    project_metadata = json.loads(
+        json.dumps(
+            toml.load("pyproject.toml"),
+        ),
+        object_hook=lambda item: SimpleNamespace(**item),
+    )
 
     # in order to build docker image need to know:
     # - name and version (for docker tag)
     # - model/vectorizer name (required for the build process)
-    name = project_metadata["tool"]["poetry"]["name"]
-    version = project_metadata["tool"]["poetry"]["version"]
-    model_name = config["vectorizer"]["model_name"]
+    name = project_metadata.tool.poetry.name
+    version = project_metadata.tool.poetry.version
+    model_name = config.vectorizer.model_name
     # - parameters for uvicorn (runs application)
-    host = config["app"]["host"]
-    port = config["app"]["port"]
+    host = config.app.host
+    port = config.app.port
 
     subprocess.run(
         "docker build "

@@ -1,30 +1,34 @@
 import json
+import time
 
 import pytest
-from fastapi.testclient import TestClient
+import requests
 from requests import Response
 
-from app import app
+from src import config
 
 
-class TestVectorsEndpoint:
+class TestVectorsDocker:
 
     test_texts = ["", "Test text"]
 
     @classmethod
-    def setup_class(cls: "TestVectorsEndpoint") -> None:
-        cls.client = TestClient(app)
-        # When you need your event handlers (startup and shutdown) to run in your tests,
-        # you can use the TestClient with a `with` statement
-        # but it has to be done in each test which means that model will be loaded each time
-        # that's why it's better to call startup/shutdown handlers explicitly once
-        # for all tests
-        cls.client.__enter__()
-        cls.endpoint = "/vectors"
+    def __wait_for_startup(cls: "TestVectorsDocker", url: str, timeout: int) -> None:
+
+        for _ in range(timeout):
+            response = requests.get(url)
+            if response.status_code == 204:
+                return None
+            time.sleep(1)
+            continue
+
+        raise Exception(f"Service hasn't started in {timeout} seconds")
 
     @classmethod
-    def teardown_class(cls: "TestVectorsEndpoint") -> None:
-        cls.client.__exit__()
+    def setup_class(cls: "TestVectorsDocker") -> None:
+        cls.endpoint = f"http://{config.app.host}:{config.app.port}/vectors"
+        ready_endpoint = f"http://{config.app.host}:{config.app.port}/.well-known/ready"
+        cls.__wait_for_startup(ready_endpoint, 100)
 
     def __post_text(
         self,
@@ -33,10 +37,7 @@ class TestVectorsEndpoint:
         assert_status_code: bool = True,
     ) -> Response:
         data = {"text": text}
-        response = TestVectorsEndpoint.client.post(
-            TestVectorsEndpoint.endpoint,
-            data=json.dumps(data),
-        )
+        response = requests.post(TestVectorsDocker.endpoint, data=json.dumps(data))
         if assert_status_code:
             assert response.status_code == 200
         if as_json:
