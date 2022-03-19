@@ -20,7 +20,9 @@ Though this module is created for Weaviate it can be used for any other purpose 
 
 ## How to use different model
 
-Currently `paraphrase-MiniLM-L6-v2` pretrained sentence-transformer model is used as it's fastest. If you want to use any other pretrained model from [the list](https://www.sbert.net/docs/pretrained_models.html) then just change the model name in the **src/config/config.yaml** file.
+Currently [msmarco-distilbert-base-v4](https://www.sbert.net/docs/pretrained-models/msmarco-v3.html) is used as it's better suited for text vector search. It's an asymmetric model which is better for my needs. More about difference between symmetric/asymmetric models you can find [here](msmarco-distilbert-base-v4).
+
+If you want to use any other pretrained model from [the list](https://www.sbert.net/docs/pretrained_models.html) then just change the model name in the **src/config/config.yaml** file.
 
 In case of any other model then these three changes have to be made:
 
