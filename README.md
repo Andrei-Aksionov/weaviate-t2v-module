@@ -73,3 +73,15 @@ docker run -it --rm -p 8080:8080 weaviate-t2-module:[version]
 ```sh
 pytest
 ```
+
+It will run also tests for docker container. If docker container is not running but you want to run all tests except for docker ones:
+
+```sh
+pytest -m "not Docker"
+```
+
+And if you want to run only docker container tests:
+
+```sh
+pytest -m "Docker"
+```

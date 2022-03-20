@@ -50,6 +50,9 @@ line_length = 120
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+markers = [
+  "Docker: marks tests for docker container (deselect with '-m \"not Docker\"')",
+]
 python_files = "*_test.py"
 testpaths = ["tests"]
 

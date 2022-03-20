@@ -1,10 +1,13 @@
 import time
 
+import pytest
 import requests
+from requests import Timeout
 
 from src import config
 
 
+@pytest.mark.Docker
 class TestMetaDocker:
     @classmethod
     def __wait_for_startup(cls: "TestMetaDocker", url: str, timeout: int) -> None:
@@ -16,13 +19,13 @@ class TestMetaDocker:
             time.sleep(1)
             continue
 
-        raise Exception(f"Service hasn't started in {timeout} seconds")
+        raise Timeout(f"Service hasn't started in {timeout} seconds")
 
     @classmethod
     def setup_class(cls: "TestMetaDocker") -> None:
         cls.endpoint = f"http://{config.app.host}:{config.app.port}/meta"
         ready_endpoint = f"http://{config.app.host}:{config.app.port}/.well-known/ready"
-        cls.__wait_for_startup(ready_endpoint, 100)
+        cls.__wait_for_startup(ready_endpoint, 10)
 
     def test_meta_output_is_dictionary(self) -> None:
 

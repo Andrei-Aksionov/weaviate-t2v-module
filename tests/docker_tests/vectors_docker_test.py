@@ -3,11 +3,12 @@ import time
 
 import pytest
 import requests
-from requests import Response
+from requests import Response, Timeout
 
 from src import config
 
 
+@pytest.mark.Docker
 class TestVectorsDocker:
 
     test_texts = ["", "Test text"]
@@ -22,13 +23,13 @@ class TestVectorsDocker:
             time.sleep(1)
             continue
 
-        raise Exception(f"Service hasn't started in {timeout} seconds")
+        raise Timeout(f"Service hasn't started in {timeout} seconds")
 
     @classmethod
     def setup_class(cls: "TestVectorsDocker") -> None:
         cls.endpoint = f"http://{config.app.host}:{config.app.port}/vectors"
         ready_endpoint = f"http://{config.app.host}:{config.app.port}/.well-known/ready"
-        cls.__wait_for_startup(ready_endpoint, 100)
+        cls.__wait_for_startup(ready_endpoint, 10)
 
     def __post_text(
         self,
