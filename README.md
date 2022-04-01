@@ -85,3 +85,17 @@ And if you want to run only docker container tests:
 ```sh
 pytest -m "Docker"
 ```
+
+For tests [Hypothesis](https://hypothesis.readthedocs.io/en/latest/) is used. It will try to generate many different variants of passing variables in order to check all cases (including edge ones).
+
+In order to see statistics of variable generation run:
+
+```sh
+pytest --hypothesis-show-statistics
+```
+
+If you want to see what variables were generated run:
+
+```sh
+pytest -s --hypothesis-verbosity=debug
+```

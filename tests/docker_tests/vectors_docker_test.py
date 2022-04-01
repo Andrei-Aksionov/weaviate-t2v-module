@@ -3,9 +3,11 @@ import time
 
 import pytest
 import requests
+from hypothesis import example, given
 from requests import Response, Timeout
 
 from src import config
+from tests.utils.hypothesis import generate_text
 
 
 @pytest.mark.Docker
@@ -45,19 +47,22 @@ class TestVectorsDocker:
             response = response.json()
         return response
 
-    @pytest.mark.parametrize("text", test_texts)
+    @given(generate_text())
+    @example(*test_texts)
     def test_vectors_output_is_dictionary(self, text: str) -> None:
         # When/Then
         response = self.__post_text(text)
         assert isinstance(response, dict)
 
-    @pytest.mark.parametrize("text", test_texts)
+    @given(generate_text())
+    @example(*test_texts)
     def test_vectors_output_dict_not_empty(self, text: str) -> None:
         # When/Then
         response = self.__post_text(text)
         assert bool(response)
 
-    @pytest.mark.parametrize("text", test_texts)
+    @given(generate_text())
+    @example(*test_texts)
     def test_vectors_output_dict_contains_expected_keys(self, text: str) -> None:
         # Given
         expected_keys = ("text", "vector", "dim")
@@ -67,7 +72,8 @@ class TestVectorsDocker:
         for key in expected_keys:
             assert key in response
 
-    @pytest.mark.parametrize("text", test_texts)
+    @given(generate_text())
+    @example(*test_texts)
     def test_vectors_output_dict_not_empty_values(self, text: str) -> None:
         # When/Then
         response = self.__post_text(text)
@@ -78,7 +84,8 @@ class TestVectorsDocker:
         else:
             assert all(value for key, value in response.items() if key != "text")
 
-    @pytest.mark.parametrize("text", test_texts)
+    @given(generate_text())
+    @example(*test_texts)
     def test_vectors_output_check_vector_length(self, text: str) -> None:
         # When/Then
         response = self.__post_text(text)
