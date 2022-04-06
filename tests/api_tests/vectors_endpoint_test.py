@@ -1,11 +1,12 @@
 import json
 
 from fastapi.testclient import TestClient
-from hypothesis import example, given
+from hypothesis import example, given, settings
 from requests import Response
 
 from app import app
-from tests.utils.hypothesis import generate_text
+from src import config
+from tests.utils.hypothesis_utils import generate_text
 
 
 class TestVectorsEndpoint:
@@ -44,6 +45,7 @@ class TestVectorsEndpoint:
             response = response.json()
         return response
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_is_dictionary(self, text: str) -> None:
@@ -51,6 +53,7 @@ class TestVectorsEndpoint:
         response = self.__post_text(text)
         assert isinstance(response, dict)
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_dict_not_empty(self, text: str) -> None:
@@ -58,6 +61,7 @@ class TestVectorsEndpoint:
         response = self.__post_text(text)
         assert bool(response)
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_dict_contains_expected_keys(self, text: str) -> None:
@@ -69,6 +73,7 @@ class TestVectorsEndpoint:
         for key in expected_keys:
             assert key in response
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_dict_not_empty_values(self, text: str) -> None:
@@ -81,6 +86,7 @@ class TestVectorsEndpoint:
         else:
             assert all(value for key, value in response.items() if key != "text")
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_check_vector_length(self, text: str) -> None:

@@ -1,8 +1,6 @@
 <h1 align="center">Welcome to weaviate-t2v-module</h1>
 
-![alt text](references/readme/images/similarity.jpg)
-
-<p>
+<p align=center><img src="references/readme/images/similarity.jpg"></p>
 
 > Service that takes text as an input and returns it's vector representation. Texts with similar meaning will have similar vectors, texts with different meaning - different vectors.
 
@@ -52,10 +50,15 @@ python -m uvicorn app:app --port 8080
 
 ## Docker
 
-In order to build docker image there is a helper script: **src/service/docker/build_docker_image.py.** It will build an image with the name and version that are specified in pyproject.toml file plus provides arguments from src/config/config.yaml file.
+In order to build docker image there is a helper script: **src/service/docker/manage.py**. It expects an argument **--stage** with one of this values:
+
+- build
+- test
+
+In order to build docker image with name and version that are parsed from *pyproject.toml* file simply run:
 
 ```sh
-python src/service/docker/build_docker_image.py
+python src/service/docker/manage.py --stage build
 ```
 
 After image is built it can be started with:
@@ -74,17 +77,27 @@ docker run -it --rm -p 8080:8080 weaviate-t2-module:[version]
 pytest
 ```
 
-It will run also tests for docker container. If docker container is not running but you want to run all tests except for docker ones:
+It will run all tests including tests for docker container. If you want to run all tests except for docker ones:
 
 ```sh
 pytest -m "not Docker"
 ```
 
-And if you want to run only docker container tests:
+And if you want to run only docker container tests (container has to be running):
 
 ```sh
 pytest -m "Docker"
 ```
+
+It's also possible to start docker container and run tests in one command:
+
+```sh
+python src/service/docker/manage.py --stage test
+```
+
+The command above will start docker container, run tests and stop it.
+
+***
 
 For tests [Hypothesis](https://hypothesis.readthedocs.io/en/latest/) is used. It will try to generate many different variants of passing variables in order to check all cases (including edge ones).
 

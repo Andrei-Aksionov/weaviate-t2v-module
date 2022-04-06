@@ -239,6 +239,18 @@ python-versions = ">=3.7"
 flake8 = ">=3.0,<3.2.0 || >3.2.0"
 
 [[package]]
+name = "flake8-docstrings"
+version = "1.6.0"
+description = "Extension for flake8 which uses pydocstyle to check docstrings"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+flake8 = ">=3"
+pydocstyle = ">=2.1"
+
+[[package]]
 name = "flake8-eradicate"
 version = "1.2.0"
 description = "Flake8 plugin to find commented out code"
@@ -345,7 +357,7 @@ quality = ["black (>=20.8b1)", "isort (>=5.5.4)", "flake8 (>=3.8.3)"]
 
 [[package]]
 name = "hypothesis"
-version = "6.40.2"
+version = "6.40.3"
 description = "A library for property-based testing"
 category = "dev"
 optional = false
@@ -569,6 +581,20 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
+name = "pydocstyle"
+version = "6.1.1"
+description = "Python docstring style checker"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+snowballstemmer = "*"
+
+[package.extras]
+toml = ["toml"]
+
+[[package]]
 name = "pyflakes"
 version = "2.4.0"
 description = "passive checker of Python programs"
@@ -745,6 +771,14 @@ description = "Sniff out which async library your code is running under"
 category = "main"
 optional = false
 python-versions = ">=3.5"
+
+[[package]]
+name = "snowballstemmer"
+version = "2.2.0"
+description = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "sortedcontainers"
@@ -970,7 +1004,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9.9"
-content-hash = "a43940498dbe84611c718655b658429899962cb8c0f1a9cc5250594f61f3e07e"
+content-hash = "c27d281919db426e681a114567114c6df6ddd48c8bc4f26d5ca0e3f8836f84de"
 
 [metadata.files]
 antlr4-python3-runtime = [
@@ -1071,6 +1105,10 @@ flake8-comprehensions = [
     {file = "flake8-comprehensions-3.8.0.tar.gz", hash = "sha256:8e108707637b1d13734f38e03435984f6b7854fa6b5a4e34f93e69534be8e521"},
     {file = "flake8_comprehensions-3.8.0-py3-none-any.whl", hash = "sha256:9406314803abe1193c064544ab14fdc43c58424c0882f6ff8a581eb73fc9bb58"},
 ]
+flake8-docstrings = [
+    {file = "flake8-docstrings-1.6.0.tar.gz", hash = "sha256:9fe7c6a306064af8e62a055c2f61e9eb1da55f84bb39caef2b84ce53708ac34b"},
+    {file = "flake8_docstrings-1.6.0-py2.py3-none-any.whl", hash = "sha256:99cac583d6c7e32dd28bbfbef120a7c0d1b6dde4adb5a9fd441c4227a6534bde"},
+]
 flake8-eradicate = [
     {file = "flake8-eradicate-1.2.0.tar.gz", hash = "sha256:acaa1b6839ff00d284b805c432fdfa6047262bd15a5504ec945797e87b4de1fa"},
     {file = "flake8_eradicate-1.2.0-py3-none-any.whl", hash = "sha256:51dc660d0c1c1ed93af0f813540bbbf72ab2d3466c14e3f3bac371c618b6042f"},
@@ -1104,8 +1142,8 @@ huggingface-hub = [
     {file = "huggingface_hub-0.4.0.tar.gz", hash = "sha256:f0e3389f8988eb7781b17de520ae7fd0aa50d9823534e3ae55344d943a88ac87"},
 ]
 hypothesis = [
-    {file = "hypothesis-6.40.2-py3-none-any.whl", hash = "sha256:cf2e300b018c1cb0647fabbd4fbbb40bf62bd17be11f82748092c8f9bc034efb"},
-    {file = "hypothesis-6.40.2.tar.gz", hash = "sha256:49e82f9aed63836e5c40081aaa795cffe9f4322f39caa188b903cfd4c6942733"},
+    {file = "hypothesis-6.40.3-py3-none-any.whl", hash = "sha256:da249cdb3c0e17681aaf48b6b788c4fe0db39f2c8930c991712fdbe9284db3a4"},
+    {file = "hypothesis-6.40.3.tar.gz", hash = "sha256:edd2ae350e65eab68eb874ff96e32bee607e9b25e7746b90d9f14ac6749d0296"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
@@ -1247,6 +1285,10 @@ pydantic = [
     {file = "pydantic-1.8.2-cp39-cp39-win_amd64.whl", hash = "sha256:4be75bebf676a5f0f87937c6ddb061fa39cbea067240d98e298508c1bda6f3f3"},
     {file = "pydantic-1.8.2-py3-none-any.whl", hash = "sha256:fec866a0b59f372b7e776f2d7308511784dace622e0992a0b59ea3ccee0ae833"},
     {file = "pydantic-1.8.2.tar.gz", hash = "sha256:26464e57ccaafe72b7ad156fdaa4e9b9ef051f69e175dbbb463283000c05ab7b"},
+]
+pydocstyle = [
+    {file = "pydocstyle-6.1.1-py3-none-any.whl", hash = "sha256:6987826d6775056839940041beef5c08cc7e3d71d63149b48e36727f70144dc4"},
+    {file = "pydocstyle-6.1.1.tar.gz", hash = "sha256:1d41b7c459ba0ee6c345f2eb9ae827cab14a7533a88c5c6f7e94923f72df92dc"},
 ]
 pyflakes = [
     {file = "pyflakes-2.4.0-py2.py3-none-any.whl", hash = "sha256:3bb3a3f256f4b7968c9c788781e4ff07dce46bdf12339dcda61053375426ee2e"},
@@ -1497,6 +1539,10 @@ six = [
 sniffio = [
     {file = "sniffio-1.2.0-py3-none-any.whl", hash = "sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663"},
     {file = "sniffio-1.2.0.tar.gz", hash = "sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de"},
+]
+snowballstemmer = [
+    {file = "snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
+    {file = "snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
 ]
 sortedcontainers = [
     {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},

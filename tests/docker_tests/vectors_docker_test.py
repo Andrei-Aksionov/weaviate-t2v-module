@@ -1,13 +1,13 @@
 import json
-import time
 
 import pytest
 import requests
-from hypothesis import example, given
-from requests import Response, Timeout
+from hypothesis import example, given, settings
+from requests import Response
 
 from src import config
-from tests.utils.hypothesis import generate_text
+from tests.utils.endpoint_utils import wait_for_startup
+from tests.utils.hypothesis_utils import generate_text
 
 
 @pytest.mark.Docker
@@ -16,22 +16,12 @@ class TestVectorsDocker:
     test_texts = ["", "Test text"]
 
     @classmethod
-    def __wait_for_startup(cls: "TestVectorsDocker", url: str, timeout: int) -> None:
-
-        for _ in range(timeout):
-            response = requests.get(url)
-            if response.status_code == 204:
-                return None
-            time.sleep(1)
-            continue
-
-        raise Timeout(f"Service hasn't started in {timeout} seconds")
-
-    @classmethod
     def setup_class(cls: "TestVectorsDocker") -> None:
-        cls.endpoint = f"http://{config.app.host}:{config.app.port}/vectors"
+        # before starting any test need to wait till docker container is ready
         ready_endpoint = f"http://{config.app.host}:{config.app.port}/.well-known/ready"
-        cls.__wait_for_startup(ready_endpoint, 10)
+        timeout = config.test.docker.wait_for_startup
+        wait_for_startup(url=ready_endpoint, expected_status_code=204, timeout=timeout)
+        cls.endpoint = f"http://{config.app.host}:{config.app.port}/vectors"
 
     def __post_text(
         self,
@@ -47,6 +37,7 @@ class TestVectorsDocker:
             response = response.json()
         return response
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_is_dictionary(self, text: str) -> None:
@@ -54,6 +45,7 @@ class TestVectorsDocker:
         response = self.__post_text(text)
         assert isinstance(response, dict)
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_dict_not_empty(self, text: str) -> None:
@@ -61,6 +53,7 @@ class TestVectorsDocker:
         response = self.__post_text(text)
         assert bool(response)
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_dict_contains_expected_keys(self, text: str) -> None:
@@ -72,6 +65,7 @@ class TestVectorsDocker:
         for key in expected_keys:
             assert key in response
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_dict_not_empty_values(self, text: str) -> None:
@@ -84,6 +78,7 @@ class TestVectorsDocker:
         else:
             assert all(value for key, value in response.items() if key != "text")
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     @example(*test_texts)
     def test_vectors_output_check_vector_length(self, text: str) -> None:

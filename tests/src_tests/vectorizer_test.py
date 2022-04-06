@@ -1,9 +1,9 @@
 import pytest
-from hypothesis import given
+from hypothesis import given, settings
 from sentence_transformers import SentenceTransformer
 
 from src import Meta, Vectorizer, config
-from tests.utils.hypothesis import generate_text
+from tests.utils.hypothesis_utils import generate_text
 
 
 @pytest.mark.asyncio
@@ -22,6 +22,7 @@ class TestVectorizer:
         with pytest.raises(ValueError, match="None value is not allowed"):
             await TestVectorizer.vectorizer.vectorize(text)
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     async def test_vectorizer_returns_list(self, text: str) -> None:
         # When
@@ -30,6 +31,7 @@ class TestVectorizer:
         # Then
         assert isinstance(vector, list)
 
+    @settings(max_examples=config.test.hypothesis.max_examples)
     @given(generate_text())
     async def test_vectorizer_returns_list_of_floats(self, text: str) -> None:
         # When
