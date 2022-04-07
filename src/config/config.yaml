@@ -4,3 +4,12 @@ vectorizer:
 app:
   host: 0.0.0.0
   port: 8080
+
+test:
+  docker:
+    wait_for_startup: 30
+    container:
+      postfix: test_container
+  hypothesis:
+    # how many example for each test will be generated
+    max_examples: 50

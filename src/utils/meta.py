@@ -24,5 +24,7 @@ class Meta:
             "name": "sentence-transformer",
             "version": self.model._model_config["__version__"],
             "language": "en",
-            "description": self.model._model_card_text,
+            "max_sequence_length": self.model.get_max_seq_length(),
+            "embedding_size": self.model.get_sentence_embedding_dimension(),
+            "description": str(self.model),
         }

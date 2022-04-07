@@ -1,32 +1,27 @@
 import json
 
-from fastapi.testclient import TestClient
+import pytest
+import requests
 from hypothesis import example, given, settings
 from requests import Response
 
-from app import app
 from src import config
+from tests.utils.endpoint_utils import wait_for_startup
 from tests.utils.hypothesis_utils import generate_text
 
 
-class TestVectorsEndpoint:
+@pytest.mark.Docker
+class TestVectorsDocker:
 
     test_texts = ["", "Test text"]
 
     @classmethod
-    def setup_class(cls: "TestVectorsEndpoint") -> None:
-        cls.client = TestClient(app)
-        # When you need your event handlers (startup and shutdown) to run in your tests,
-        # you can use the TestClient with a `with` statement
-        # but it has to be done in each test which means that model will be loaded each time
-        # that's why it's better to call startup/shutdown handlers explicitly once
-        # for all tests
-        cls.client.__enter__()
-        cls.endpoint = "/vectors"
-
-    @classmethod
-    def teardown_class(cls: "TestVectorsEndpoint") -> None:
-        cls.client.__exit__()
+    def setup_class(cls: "TestVectorsDocker") -> None:
+        # before starting any test need to wait till docker container is ready
+        ready_endpoint = f"http://{config.app.host}:{config.app.port}/.well-known/ready"
+        timeout = config.test.docker.wait_for_startup
+        wait_for_startup(url=ready_endpoint, expected_status_code=204, timeout=timeout)
+        cls.endpoint = f"http://{config.app.host}:{config.app.port}/vectors"
 
     def __post_text(
         self,
@@ -35,10 +30,7 @@ class TestVectorsEndpoint:
         assert_status_code: bool = True,
     ) -> Response:
         data = {"text": text}
-        response = TestVectorsEndpoint.client.post(
-            TestVectorsEndpoint.endpoint,
-            data=json.dumps(data),
-        )
+        response = requests.post(TestVectorsDocker.endpoint, data=json.dumps(data))
         if assert_status_code:
             assert response.status_code == 200
         if as_json:

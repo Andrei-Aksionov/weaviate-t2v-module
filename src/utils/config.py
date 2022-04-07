@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from omegaconf import OmegaConf
 
-config = OmegaConf.load("src/config/config.yaml")
+config = OmegaConf.load(Path(__file__).parents[1] / "config/config.yaml")
