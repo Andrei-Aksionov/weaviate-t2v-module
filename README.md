@@ -112,3 +112,15 @@ If you want to see what variables were generated run:
 ```sh
 pytest -s --hypothesis-verbosity=debug
 ```
+
+***
+
+## Additional: git pre-commit hook
+
+In order to run `black` formatter and `flake8` linter before each commit you need to add them into `.git/hooks` folder either manually or with helper script:
+
+```bash
+sh .add_git_hooks.sh`
+```
+
+This script will put `pre-commit` file into `.git/hooks` folder of the project and make it executable.
