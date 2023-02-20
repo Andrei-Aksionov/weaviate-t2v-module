@@ -52,8 +52,10 @@ python -m uvicorn app:app --port 8080
 
 In order to build docker image there is a helper script: **src/service/docker/manage.py**. It expects an argument **--stage** with one of this values:
 
-- build
-- test
+- **build**: builds an image
+- **inference**: runs pre-build image (optionally in detached mode)
+- **stop-inference**: stops inference running in detached mode
+- **test**: starts container, runs tests and stops running container
 
 In order to build docker image with name and version that are parsed from *pyproject.toml* file simply run:
 
@@ -64,7 +66,13 @@ python src/service/docker/manage.py --stage build
 After image is built it can be started with:
 
 ```sh
-docker run -it --rm -p 8080:8080 weaviate-t2-module:[version]
+python src/service/docker/manage.py --stage inference [--detach]
+```
+
+If the container is running in detached mode you can stop it with:
+
+```sh
+python src/service/docker/manage.py --stage stop-inference
 ```
 
 **Examples of api calls can be found in src/service/api_calls.rest file.**

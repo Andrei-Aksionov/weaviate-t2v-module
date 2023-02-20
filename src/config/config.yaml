@@ -5,6 +5,11 @@ app:
   host: 0.0.0.0
   port: 8080
 
+inference:
+  docker:
+    container:
+      postfix: inference_container
+
 test:
   docker:
     wait_for_startup: 30
